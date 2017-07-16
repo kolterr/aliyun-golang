@@ -28,14 +28,22 @@ func (o *Aliyun) Curl(url string, method string, post string) (string, error) {
 	req, _ := http.NewRequest(method, url, strings.NewReader(post))
 	res, err := client.Do(req)
 	if err != nil {
-		fmt.Println(err)
+		return "", err
 	}
 
 	defer res.Body.Close()
 
 	body, _ := ioutil.ReadAll(res.Body)
-	fmt.Println(string(body))
 	return string(body), nil
+}
+
+//makeCommonURL ... 生成公共url   并返回 随机signure 随机字符串 时间戳
+func (o *Aliyun) makeCommonURL(_u string) (string, string, string) {
+	com, randStr, t := o.makeCommon()
+	_url := _u + com //生成对应的请求连接
+	param := o.makeURLQuery(_url)
+	s := o.hmacSha1(o.makeURLEncode("GET", param))
+	return s, randStr, t
 }
 
 //hmacSha1 ... signure
@@ -44,10 +52,10 @@ func (o *Aliyun) hmacSha1(s string) string {
 	mac := hmac.New(sha1.New, key)
 	mac.Write([]byte(s))
 	signure := base64.StdEncoding.EncodeToString(mac.Sum(nil))
-	return signure[:len(signure)-1]
+	return o.makeStrReplace(signure)
 }
 
-//makeURLEncode ...
+//makeURLEncode ... StringToSign
 func (o *Aliyun) makeURLEncode(m, str string) string {
 	StringToSign := m + "&" + o.percentEncode("/") + "&" + o.percentEncode(str)
 	return StringToSign
@@ -58,6 +66,14 @@ func (o *Aliyun) percentEncode(str string) string {
 	str1 := strings.Replace(url.QueryEscape(str), "+", "%20", -1)
 	str2 := strings.Replace(str1, "*", "%2A", -1)
 	return strings.Replace(str2, "%7E", "~", -1)
+}
+
+func (o *Aliyun) makeStrReplace(str string) string {
+	str1 := strings.Replace(str, "+", "%20", -1)
+	str2 := strings.Replace(str1, "*", "%2A", -1)
+	str3 := strings.Replace(str2, "=", "%3D", -1)
+	str4 := strings.Replace(str3, "/", "%2F", -1)
+	return strings.Replace(str4, "%7E", "~", -1)
 }
 
 func (o *Aliyun) makeRandStr(l int) string {
@@ -83,7 +99,7 @@ func (o *Aliyun) makeURLQuery(_url string) string {
 	querys, arr := o.makeDictionarySort(param)
 	str := ""
 	for _, k := range querys {
-		str += k + "=" + arr[k][0] + "&"
+		str += k + "=" + o.percentEncode(arr[k][0]) + "&"
 	}
 	return str[:len(str)-1]
 }
