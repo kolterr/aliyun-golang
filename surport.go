@@ -52,7 +52,8 @@ func (o *Aliyun) hmacSha1(s string) string {
 	mac := hmac.New(sha1.New, key)
 	mac.Write([]byte(s))
 	signure := base64.StdEncoding.EncodeToString(mac.Sum(nil))
-	return o.makeStrReplace(signure)
+	fmt.Println(o.percentEncode(signure))
+	return o.percentEncode(signure)
 }
 
 //makeURLEncode ... StringToSign
@@ -64,12 +65,6 @@ func (o *Aliyun) makeURLEncode(m, str string) string {
 //percentEncode ...
 func (o *Aliyun) percentEncode(str string) string {
 	str1 := strings.Replace(url.QueryEscape(str), "+", "%20", -1)
-	str2 := strings.Replace(str1, "*", "%2A", -1)
-	return strings.Replace(str2, "%7E", "~", -1)
-}
-
-func (o *Aliyun) makeStrReplace(str string) string {
-	str1 := strings.Replace(str, "+", "%20", -1)
 	str2 := strings.Replace(str1, "*", "%2A", -1)
 	str3 := strings.Replace(str2, "=", "%3D", -1)
 	str4 := strings.Replace(str3, "/", "%2F", -1)

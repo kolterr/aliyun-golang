@@ -13,4 +13,18 @@ var (
 	RestartInstanceURL            = "https://ecs.aliyuncs.com/?Action=RebootInstance&InstanceId=%s"
 	ModifyInstanceAutoReleaseTime = "https://ecs.aliyuncs.com/?Action=ModifyInstanceAutoReleaseTime&InstanceId=%s"
 	StopInstance                  = "https://ecs.aliyuncs.com/?Action=StopInstance&InstanceId=%s"
+
+	//镜像
+	DescribeImages = "https://ecs.aliyuncs.com/?Action=DescribeImages&RegionId=%s"
+
+	//密匙对
+	DescribeKeyPairs = "https://ecs.aliyuncs.com/?action=DescribeKeyPairs&RegionId=%s"
+	CreateKeyPair    = "https://ecs.aliyuncs.com/?action=CreateKeyPair&RegionId=%s&KeyPairName=%s"
+	DeleteKeyPairs   = "https://ecs.aliyuncs.com/?action=DeleteKeyPairs&RegionId=%s&KeyPairNames=%s"
+	ImportKeyPair    = "https://ecs.aliyuncs.com/?action=ImportKeyPair&RegionId=%s&PublicKeyBody=%s&KeyPairName=%s"
 )
+
+//KeyPairs ...
+type KeyPairs struct {
+	KeyPairName string `json:"KeyPairName"`
+}
