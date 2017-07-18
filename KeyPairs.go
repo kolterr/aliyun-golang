@@ -34,17 +34,15 @@ func (o *Aliyun) DescribeKeyPairs(Reg string) (string, error) {
 //DeleteKeyPairs ...删除密匙对
 func (o *Aliyun) DeleteKeyPairs(Reg string, names []string) (string, error) {
 	if len(names) != 0 && Reg != "" {
-		arr := []KeyPairs{}
+		arr := []string{}
 		for i := 0; i < len(names); i++ {
-			arr = append(arr, KeyPairs{KeyPairName: names[i]})
+			arr = append(arr, names[i])
 		}
 		json, _ := json.Marshal(arr)
-		fmt.Println(string(json))
 		_url := fmt.Sprintf(DeleteKeyPairs, Reg, o.percentEncode(string(json)))
 		s, randStr, t := o.makeCommonURL(_url)
 		url := _url + fmt.Sprintf(CommonURL, s, randStr, o.Account.AccessID, t) //生成对应的请求链接 带 signure
-		fmt.Println(url)
-		res, err := o.Curl(url, "GET", "") //触发请求
+		res, err := o.Curl(url, "GET", "")                                      //触发请求
 		return res, err
 	}
 	return "", errors.New("must need a KeyPairName")

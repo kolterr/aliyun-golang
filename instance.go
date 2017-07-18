@@ -6,9 +6,10 @@ import (
 )
 
 //CreateInstance ...  创建实例  创建后为停止状态
-func (o *Aliyun) CreateInstance(Reg, ImageID, InstanceType string) (string, error) {
+func (o *Aliyun) CreateInstance(Reg, ImageID, InstanceType string, args ...map[string]string) (string, error) {
 	if Reg != "" && ImageID != "" && InstanceType != "" {
-		_url := fmt.Sprintf(CreateURL, Reg, ImageID, InstanceType)
+		str := o.makeMapArgs(args)
+		_url := fmt.Sprintf(CreateURL, Reg, ImageID, InstanceType) + str
 		s, randStr, t := o.makeCommonURL(_url)
 		url := _url + fmt.Sprintf(CommonURL, s, randStr, o.Account.AccessID, t) //生成对应的请求链接 带 signure
 		res, err := o.Curl(url, "GET", "")                                      //触发请求
@@ -18,10 +19,12 @@ func (o *Aliyun) CreateInstance(Reg, ImageID, InstanceType string) (string, erro
 }
 
 //DescribeInstances ...  查询实例列表
-func (o *Aliyun) DescribeInstances(Reg string) (string, error) {
-	s, randStr, t := o.makeCommonURL(fmt.Sprintf(InstanceURL, Reg))                                  //对query部分签名
-	url := fmt.Sprintf(InstanceURL, Reg) + fmt.Sprintf(CommonURL, s, randStr, o.Account.AccessID, t) //生成对应的请求链接 带 signure
-	res, err := o.Curl(url, "GET", "")                                                               //触发请求
+func (o *Aliyun) DescribeInstances(Reg string, args ...map[string]string) (string, error) {
+	str := o.makeMapArgs(args)
+	_url := fmt.Sprintf(InstanceURL, Reg) + str
+	s, randStr, t := o.makeCommonURL(_url)                                  //对query部分签名
+	url := _url + fmt.Sprintf(CommonURL, s, randStr, o.Account.AccessID, t) //生成对应的请求链接 带 signure
+	res, err := o.Curl(url, "GET", "")                                      //触发请求
 	return res, err
 }
 

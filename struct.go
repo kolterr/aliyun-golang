@@ -28,3 +28,8 @@ var (
 type KeyPairs struct {
 	KeyPairName string `json:"KeyPairName"`
 }
+
+//InstanceID ...
+type InstanceID struct {
+	ID string
+}

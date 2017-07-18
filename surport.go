@@ -116,3 +116,15 @@ func (o *Aliyun) makeDictionarySort(arr map[string][]string) ([]string, map[stri
 	sort.Strings(keys)
 	return keys, arr
 }
+
+func (o *Aliyun) makeMapArgs(args []map[string]string) string {
+	str := ""
+	if len(args) > 0 {
+		for _, v := range args {
+			for kk, vv := range v {
+				str += "&" + kk + "=" + vv + "&"
+			}
+		}
+	}
+	return str[:len(str)-1]
+}
