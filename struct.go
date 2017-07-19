@@ -22,6 +22,9 @@ var (
 	CreateKeyPair    = "https://ecs.aliyuncs.com/?action=CreateKeyPair&RegionId=%s&KeyPairName=%s"
 	DeleteKeyPairs   = "https://ecs.aliyuncs.com/?action=DeleteKeyPairs&RegionId=%s&KeyPairNames=%s"
 	ImportKeyPair    = "https://ecs.aliyuncs.com/?action=ImportKeyPair&RegionId=%s&PublicKeyBody=%s&KeyPairName=%s"
+
+	//网络
+	AllocatePublicIPAddressURL = "https://ecs.aliyuncs.com/?Action=AllocatePublicIpAddress&InstanceId=%s"
 )
 
 //KeyPairs ...
@@ -32,4 +35,17 @@ type KeyPairs struct {
 //InstanceID ...
 type InstanceID struct {
 	ID string
+}
+
+type checkinstance struct {
+	Instances struct {
+		Instance []struct {
+			InstanceID      string
+			PublicIPAddress []string
+		}
+	}
+}
+
+type item struct {
+	IPAddress []string
 }

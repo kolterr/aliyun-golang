@@ -52,7 +52,6 @@ func (o *Aliyun) hmacSha1(s string) string {
 	mac := hmac.New(sha1.New, key)
 	mac.Write([]byte(s))
 	signure := base64.StdEncoding.EncodeToString(mac.Sum(nil))
-	fmt.Println(o.percentEncode(signure))
 	return o.percentEncode(signure)
 }
 

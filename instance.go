@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-//CreateInstance ...  创建实例  创建后为停止状态
+//CreateInstance ...  创建实例  创建后为停止状态且不会分配公网IP
 func (o *Aliyun) CreateInstance(Reg, ImageID, InstanceType string, args ...map[string]string) (string, error) {
 	if Reg != "" && ImageID != "" && InstanceType != "" {
 		str := o.makeMapArgs(args)
@@ -20,7 +20,10 @@ func (o *Aliyun) CreateInstance(Reg, ImageID, InstanceType string, args ...map[s
 
 //DescribeInstances ...  查询实例列表
 func (o *Aliyun) DescribeInstances(Reg string, args ...map[string]string) (string, error) {
-	str := o.makeMapArgs(args)
+	str := ""
+	if len(args) > 0 {
+		str = o.makeMapArgs(args)
+	}
 	_url := fmt.Sprintf(InstanceURL, Reg) + str
 	s, randStr, t := o.makeCommonURL(_url)                                  //对query部分签名
 	url := _url + fmt.Sprintf(CommonURL, s, randStr, o.Account.AccessID, t) //生成对应的请求链接 带 signure
