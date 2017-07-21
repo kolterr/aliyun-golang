@@ -25,6 +25,15 @@ var (
 
 	//网络
 	AllocatePublicIPAddressURL = "https://ecs.aliyuncs.com/?Action=AllocatePublicIpAddress&InstanceId=%s"
+
+	//地域
+	DescribeRegions = "https://ecs.aliyuncs.com/?Action=DescribeRegions"
+	DescribeZones   = "https://ecs.aliyuncs.com/?Action=DescribeZones&RegionId=%s"
+	//监控
+	DescribeInstanceMonitorData = "https://ecs.aliyuncs.com/?Action=DescribeInstanceMonitorData&InstanceId=%s&StartTime=%s&EndTime=%s"
+	DescribeDiskMonitorData     = "https://ecs.aliyuncs.com/?Action=DescribeDiskMonitorData&DiskId=%s&StartTime=%s&EndTime=%s"
+	//磁盘
+	DescribeDisks = "https://ecs.aliyuncs.com/?action=DescribeDisks&RegionId=%s"
 )
 
 //KeyPairs ...

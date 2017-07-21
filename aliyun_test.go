@@ -19,7 +19,7 @@ func Test1(t *testing.T) {
 	c := make(map[string]string)
 	c["KeyPairName"] = "CF"
 	// c["InternetMaxBandwidthOut"] = "5"
-	res, err := a.DeleteInstance("i-2zeingetk3pqoizx6ewc")
+	res, err := a.DescribeDiskMonitorData("d-2zea456im5lkgeph7kj9", "2017-07-21T12:07:00Z", "2017-07-21T20:07:00Z")
 	if err != nil {
 		t.Fatal(err)
 	}

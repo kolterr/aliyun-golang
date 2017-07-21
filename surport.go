@@ -103,8 +103,8 @@ func (o *Aliyun) makeURLQuery(_url string) string {
 
 func (o *Aliyun) makeCommon() (string, string, string) {
 	t := o.makeTime()
-	randStr := o.makeRandStr(20)                                                  //生成随机字符串
-	com := fmt.Sprintf(CommonURLNoSign, o.Format, randStr, o.Account.AccessID, t) //拿到没有签名的公共参数部分
+	randStr := o.makeRandStr(20)
+	com := fmt.Sprintf(CommonURLNoSign, o.Format, randStr, o.Account.AccessID, t)
 	return com, randStr, t
 }
 
