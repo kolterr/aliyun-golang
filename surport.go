@@ -16,7 +16,7 @@ import (
 	"time"
 )
 
-//Curl ...
+//Curl ... HTTPS request
 func (o *Aliyun) Curl(url string, method string, post string) (string, error) {
 	client := http.Client{
 		Timeout:   time.Duration(15 * time.Second), //15s超时
@@ -37,7 +37,8 @@ func (o *Aliyun) Curl(url string, method string, post string) (string, error) {
 	return string(body), nil
 }
 
-//makeCommonURL ... 生成公共url   并返回 随机signure 随机字符串 时间戳
+//makeCommonURL ..
+//build a common url and return signure randstr timestamp
 func (o *Aliyun) makeCommonURL(_u string) (string, string, string) {
 	com, randStr, t := o.makeCommon()
 	_url := _u + com //生成对应的请求连接
@@ -46,7 +47,7 @@ func (o *Aliyun) makeCommonURL(_u string) (string, string, string) {
 	return s, randStr, t
 }
 
-//hmacSha1 ... signure
+//hmacSha1 ... signure HMAC-SHA1
 func (o *Aliyun) hmacSha1(s string) string {
 	key := []byte(o.Account.AccessSecret + "&")
 	mac := hmac.New(sha1.New, key)
@@ -55,13 +56,13 @@ func (o *Aliyun) hmacSha1(s string) string {
 	return o.percentEncode(signure)
 }
 
-//makeURLEncode ... StringToSign
+//makeURLEncode ... StringToSign build a string which will be used to signup
 func (o *Aliyun) makeURLEncode(m, str string) string {
 	StringToSign := m + "&" + o.percentEncode("/") + "&" + o.percentEncode(str)
 	return StringToSign
 }
 
-//percentEncode ...
+//percentEncode ...urlencode
 func (o *Aliyun) percentEncode(str string) string {
 	str1 := strings.Replace(url.QueryEscape(str), "+", "%20", -1)
 	str2 := strings.Replace(str1, "*", "%2A", -1)
@@ -70,6 +71,7 @@ func (o *Aliyun) percentEncode(str string) string {
 	return strings.Replace(str4, "%7E", "~", -1)
 }
 
+//build rand string to kepp the request uniqueness
 func (o *Aliyun) makeRandStr(l int) string {
 	str := "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	bytes := []byte(str)
@@ -81,12 +83,13 @@ func (o *Aliyun) makeRandStr(l int) string {
 	return string(result)
 }
 
-//makeTime ...
+//makeTime ...UTC Format 2006-01-02T15:04:05Z
 func (o *Aliyun) makeTime() string {
 	t := time.Now().UTC().Format("2006-01-02T15:04:05Z")
 	return t
 }
 
+//get the  query which is  part of url
 func (o *Aliyun) makeURLQuery(_url string) string {
 	query, _ := url.Parse(_url)
 	param := query.Query()
@@ -100,11 +103,12 @@ func (o *Aliyun) makeURLQuery(_url string) string {
 
 func (o *Aliyun) makeCommon() (string, string, string) {
 	t := o.makeTime()
-	randStr := o.makeRandStr(20)                                        //生成随机字符串
-	com := fmt.Sprintf(CommonURLNoSign, randStr, o.Account.AccessID, t) //拿到没有签名的公共参数部分
+	randStr := o.makeRandStr(20)                                                  //生成随机字符串
+	com := fmt.Sprintf(CommonURLNoSign, o.Format, randStr, o.Account.AccessID, t) //拿到没有签名的公共参数部分
 	return com, randStr, t
 }
 
+//the query will be sort as DictionarySort which is  part of url
 func (o *Aliyun) makeDictionarySort(arr map[string][]string) ([]string, map[string][]string) {
 	keys := make([]string, len(arr))
 	i := 0
@@ -116,6 +120,7 @@ func (o *Aliyun) makeDictionarySort(arr map[string][]string) ([]string, map[stri
 	return keys, arr
 }
 
+//build a rand url strings
 func (o *Aliyun) makeMapArgs(args []map[string]string) string {
 	str := ""
 	if len(args) > 0 {

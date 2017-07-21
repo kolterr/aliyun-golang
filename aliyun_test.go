@@ -11,7 +11,7 @@ func Test1(t *testing.T) {
 		IPAddress string
 	}
 	//debian_8_08_64_40G_alibase_20170625.vhd
-	a := NewAliyun("LTAI5CNiUdyqtzK7", "wP6ooitJXcDm6iYh3IiS2ZFgPZR82U")
+	a := NewAliyun("xxx", "xxx", "JSON")
 	// ids := []string{"i-t4nimkw9we71vezgly9k"}
 	// i, _ := json.Marshal(ids)
 	// arg := make(map[string]string)
@@ -19,7 +19,7 @@ func Test1(t *testing.T) {
 	c := make(map[string]string)
 	c["KeyPairName"] = "CF"
 	// c["InternetMaxBandwidthOut"] = "5"
-	res, err := a.DeleteInstance("i-2zecno0m7jzzffocosl7")
+	res, err := a.DeleteInstance("i-2zeingetk3pqoizx6ewc")
 	if err != nil {
 		t.Fatal(err)
 	}

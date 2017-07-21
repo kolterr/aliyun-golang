@@ -2,8 +2,8 @@ package aliyun
 
 //Aliyun url ...
 var (
-	CommonURL       = "&Format=JSON&Version=2014-05-26&Signature=%s&SignatureMethod=HMAC-SHA1&SignatureNonce=%v&SignatureVersion=1.0&AccessKeyId=%s&Timestamp=%v"
-	CommonURLNoSign = "&Format=JSON&Version=2014-05-26&SignatureMethod=HMAC-SHA1&SignatureNonce=%v&SignatureVersion=1.0&AccessKeyId=%s&Timestamp=%v"
+	CommonURL       = "&Format=%s&Version=2014-05-26&Signature=%s&SignatureMethod=HMAC-SHA1&SignatureNonce=%v&SignatureVersion=1.0&AccessKeyId=%s&Timestamp=%v"
+	CommonURLNoSign = "&Format=%s&Version=2014-05-26&SignatureMethod=HMAC-SHA1&SignatureNonce=%v&SignatureVersion=1.0&AccessKeyId=%s&Timestamp=%v"
 
 	CreateURL                     = "https://ecs.aliyuncs.com/?Action=CreateInstance&RegionId=%s&ImageId=%s&InstanceType=%s"
 	StartURL                      = "https://ecs.aliyuncs.com/?Action=StartInstance&InstanceId=%s"
@@ -48,4 +48,9 @@ type checkinstance struct {
 
 type item struct {
 	IPAddress []string
+}
+
+type createBack struct {
+	RequestID  string `json:"RequestId"`
+	InstanceID string `json:"InstanceId"`
 }
