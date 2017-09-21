@@ -5,13 +5,17 @@ import (
 	"crypto/sha1"
 	"crypto/tls"
 	"encoding/base64"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"math/rand"
 	"net/http"
 	"net/url"
+	"reflect"
 	"sort"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -45,6 +49,27 @@ func (o *Aliyun) makeCommonURL(_u string) (string, string, string) {
 	param := o.makeURLQuery(_url)
 	s := o.hmacSha1(o.makeURLEncode("GET", param))
 	return s, randStr, t
+}
+
+func (o *Aliyun) makeURLInternal(arr map[string]interface{}) (_url string) {
+	com, _, _ := o.makeCommon()
+	str := ""
+	for k, v := range arr {
+		if reflect.TypeOf(v).String() == "string" {
+			str += k + "=" + v.(string) + "&"
+		} else if reflect.TypeOf(v).String() == "[]string" {
+			t, _ := json.Marshal(v.([]string))
+			str += k + "=" + string(t) + "&"
+		} else if reflect.TypeOf(v).String() == "int" {
+			str += k + "=" + strconv.Itoa(v.(int)) + "&"
+		}
+
+	}
+	_url = host + str[:len(str)-1] + com
+	param := o.makeURLQuery(_url)
+	s := o.hmacSha1(o.makeURLEncode("GET", param))
+	_url += "&Signature=" + s
+	return
 }
 
 //hmacSha1 ... signure HMAC-SHA1
@@ -131,4 +156,40 @@ func (o *Aliyun) makeMapArgs(args []map[string]string) string {
 		}
 	}
 	return str[:len(str)-1]
+}
+
+//Struct2Map ...
+func (o *Aliyun) Struct2Map(obj interface{}) (data map[string]interface{}, err error) {
+	data = make(map[string]interface{})
+	objT := reflect.TypeOf(obj)
+	objV := reflect.ValueOf(obj)
+	for i := 0; i < objT.NumField(); i++ {
+		data[objT.Field(i).Tag.Get("json")] = objV.Field(i).Interface()
+	}
+	err = nil
+	return
+}
+
+func (o *Aliyun) validator(arr map[string]interface{}) (data map[string]interface{}) {
+	log.Println(11)
+	data = make(map[string]interface{})
+	for k, v := range arr {
+		switch reflect.TypeOf(v).String() {
+		case "string":
+			if v != "" {
+				data[k] = v
+			}
+		case "[]string":
+			if len(v.([]string)) > 0 {
+				data[k] = v
+			}
+		case "int":
+			if v != 0 {
+				data[k] = v
+			}
+		default:
+			//
+		}
+	}
+	return
 }
