@@ -193,3 +193,11 @@ func (o *Aliyun) validator(arr map[string]interface{}) (data map[string]interfac
 	}
 	return
 }
+
+
+
+func (o *Aliyun)do(param interface{}){
+	regs, _ := o.Struct2Map(param)
+	params := o.validator(regs)
+	o.url = o.makeURLInternal(params)
+}

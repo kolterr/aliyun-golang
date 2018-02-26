@@ -4,6 +4,7 @@ package aliyun
 type Aliyun struct {
 	Account Account
 	Format  string //the format of response
+	url string
 }
 
 //Account ...
